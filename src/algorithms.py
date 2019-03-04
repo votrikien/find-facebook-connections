@@ -1,6 +1,6 @@
 from collections import deque
 from util import draw_tree
-from constants import SOLUTION_REQUIRED
+from constants import SOLUTION_REQUIRED, TARGET, DEPTH
 
 def print_tree(tree):
     print 'Current tree: '
@@ -60,3 +60,44 @@ def construct_path(node_id, parent_map):
     path.reverse()
     print 'FOUND PATH: %s' % path
     return str(path)
+
+def dfs(tree):
+    friendsStack = deque()
+    visited_nodes    = dict()
+    parent_map       = dict()
+    result_set       = list()
+    parent_map       = dict()
+
+    root = tree.get_root()
+    checkNode(tree, root, friendsStack, visited_nodes, parent_map, result_set)
+
+def checkNode(tree, node, friendsStack, visited_nodes, parent_map, result_set):
+    print '-----------------------------------------'
+    current_username = node.username
+    visited_nodes[current_username] = True
+    print 'Processing: %s' % current_username
+    if len(friendsStack) > DEPTH + 1:
+        print 'Reach limit without result - ' + current_username
+        return False
+    elif tree.is_goal(current_username):
+        found_path = construct_path(current_username, parent_map)
+        result_set.append(found_path)
+        if len(result_set) == SOLUTION_REQUIRED:
+            print_tree(tree)
+        return False
+    elif len(tree.get_children(current_username)) == 0:
+        return False
+    else:
+        friendsStack.append(node)
+        children = tree.get_children(current_username)
+        result = False
+        for idx, child in enumerate(children):
+            if visited_nodes.get(child.username):
+                del children[idx]
+            else:
+                parent_map[child.username] = current_username
+                result = checkNode(tree, child, friendsStack, visited_nodes, parent_map, result_set)
+                if result:
+                    break
+        if not result:
+            friendsStack.pop()

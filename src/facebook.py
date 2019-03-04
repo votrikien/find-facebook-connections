@@ -45,15 +45,16 @@ def extract_friends(raw_html):
     next_link = None
 
     content = BeautifulSoup(raw_html, features="html.parser").find('div', {"id": "root"})
-    links = content.find_all("a")
+    if content:
+        links = content.find_all("a")
 
-    for l in links:
-        href = l.get('href')
-        if href and 'fref=fr_tab' in href.encode("utf-8"):
-            username = href[1:].replace('?fref=fr_tab', '')
-            friends[username] = {'name': l.text, 'username': username}
-        if "See more friends" in str(l):
-            next_link = href
+        for l in links:
+            href = l.get('href')
+            if href and 'fref=fr_tab' in href.encode("utf-8"):
+                username = href[1:].replace('?fref=fr_tab', '')
+                friends[username] = {'name': l.text, 'username': username}
+            if "See more friends" in str(l):
+                next_link = href
 
     return friends, next_link
 

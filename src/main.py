@@ -1,4 +1,4 @@
-from algorithms import bfs
+from algorithms import bfs, dfs
 from facebook import FacebookClient
 from constants import TARGET
 
@@ -36,8 +36,11 @@ class FBTree:
 if __name__ == '__main__':
     tree = FBTree()
     tree.set_goals(TARGET)
-    results = bfs(tree)
+    print 'TARGET: ' + TARGET
+    # results = bfs(tree)
+    dfs(tree)
 
     print '------------------------------------------'
-    print "RESULT PATHS: %s\n" % '\n'.join(results)
+    # print "RESULT PATHS: %s\n" % '\n'
+    print 'END ....'
     print '------------------------------------------'
